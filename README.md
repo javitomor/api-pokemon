@@ -52,3 +52,6 @@ L'API utilise une base de données H2 et peut être consultée sur
 * pass: 
 
 Le langage de programmation utilisé est Java 11
+
+Le processus de chargement des données du fichier csv est automatisé avec spring batch. le fichier doit être déposé dans le chemin:
+ * src/main/resources/data/pokemon.csv
