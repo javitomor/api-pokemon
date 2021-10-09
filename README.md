@@ -3,7 +3,7 @@ Ce projet permet effectuer un CRUD sur une list de "pockemos" dans un fichier CS
 
 
 #Test Technique Back-End
-Petal
+Test technique de la part de l’entreprise PetalMD
 
 #INSTRUCTIONS (Français) :
 L'objectif de l’exercice technique est de créer un petit projet qui exposera un API Restful à un
