@@ -1,5 +1,6 @@
 package com.example.apipokemon;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -26,6 +27,7 @@ import javax.annotation.PostConstruct;
 @EntityScan({"com.example.apipokemon.model"})
 @EnableSwagger2
 @EnableScheduling
+@Slf4j
 public class ApiPokemonApplication {
 	@Autowired
 	JobLauncher jobLauncher;
@@ -36,14 +38,13 @@ public class ApiPokemonApplication {
 		SpringApplication.run(ApiPokemonApplication.class, args);
 	}
 
-	//@Scheduled(cron = "0 */1 * * * ?")
 	@PostConstruct
 	public void perform() throws Exception
 	{
 		JobParameters params = new JobParametersBuilder()
-				.addString("JobID", String.valueOf(System.currentTimeMillis()))
+				.addString("LoadCsvPokemon", String.valueOf(System.currentTimeMillis()))
 				.toJobParameters();
 		JobExecution execution=jobLauncher.run(job, params);
-		System.out.println("STATUS :: "+execution.getStatus());
+		log.info("Etat :: {}",execution.getStatus());
 	}
 }

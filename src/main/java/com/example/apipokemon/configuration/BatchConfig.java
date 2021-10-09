@@ -30,7 +30,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 @Configuration
 @EnableBatchProcessing
 public class BatchConfig {
-
+    //TODO no se esta cargando la primera linea del csv
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
@@ -41,20 +41,23 @@ public class BatchConfig {
     @Value("classPath:/data/pokemon.csv")
     private Resource inputResource;
 
+    @Value("${csv.pokemon.chunk.size}")
+    private int csvPokemonChunkSize;
+
     @Bean
     public Job readCSVFileJob() {
         return jobBuilderFactory
                 .get("readCSVFileJob")
                 .incrementer(new RunIdIncrementer())
-                .start(step())
+                .start(loadCsvStep())
                 .build();
     }
 
     @Bean
-    public Step step() {
+    public Step loadCsvStep() {
         return stepBuilderFactory
-                .get("step")
-                .<Pokemon, Pokemon>chunk(5)
+                .get("loadCsvStep")
+                .<Pokemon, Pokemon>chunk(csvPokemonChunkSize)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
@@ -70,7 +73,7 @@ public class BatchConfig {
     public FlatFileItemReader<Pokemon> reader() {
         FlatFileItemReader<Pokemon> itemReader = new FlatFileItemReader<Pokemon>();
         itemReader.setLineMapper(lineMapper());
-        itemReader.setLinesToSkip(1);
+        itemReader.setLinesToSkip(0);
         itemReader.setResource(inputResource);
         return itemReader;
     }
@@ -93,7 +96,7 @@ public class BatchConfig {
 
     private String[] getNamesLineTokenizer() {
         return new String[]{
-                SortFieldsPokemonEnum.ID.getColumn(),
+                SortFieldsPokemonEnum.NUMERO.getColumn(),
                 SortFieldsPokemonEnum.NAME.getColumn(),
                 SortFieldsPokemonEnum.TYPE1.getColumn(),
                 SortFieldsPokemonEnum.TYPE2.getColumn(),
@@ -121,23 +124,37 @@ public class BatchConfig {
 
 
     private String getSqlInsertPokemon() {
-        String sql = "insert into pokemon select * from (" +
-                "select "+
-                ":"+SortFieldsPokemonEnum.ID.getAttribute() +" as "+SortFieldsPokemonEnum.ID.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.NAME.getAttribute() +" as "+SortFieldsPokemonEnum.NAME.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.TYPE1.getAttribute()+" as "+SortFieldsPokemonEnum.TYPE1.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.TYPE2.getAttribute() +" as "+SortFieldsPokemonEnum.TYPE2.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.TOTAL.getAttribute() +" as "+SortFieldsPokemonEnum.TOTAL.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.HP.getAttribute() +" as "+SortFieldsPokemonEnum.HP.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.ATTACK.getAttribute() +" as "+SortFieldsPokemonEnum.ATTACK.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.DEFENSE.getAttribute() +" as "+SortFieldsPokemonEnum.DEFENSE.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.SP_ATK.getAttribute() +" as "+SortFieldsPokemonEnum.SP_ATK.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.SP_DEF.getAttribute() +" as "+SortFieldsPokemonEnum.SP_DEF.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.SPEED.getAttribute() +" as "+SortFieldsPokemonEnum.SPEED.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.GENERATION.getAttribute() +" as "+SortFieldsPokemonEnum.GENERATION.getColumn() +","+
-                ":"+SortFieldsPokemonEnum.LEGENDARY.getAttribute() +" as "+SortFieldsPokemonEnum.LEGENDARY.getColumn()+
-                ") X where not exists(SELECT * FROM pokemon WHERE "+  SortFieldsPokemonEnum.ID.getColumn()+"= :"+SortFieldsPokemonEnum.ID.getAttribute()+")";
+        String sql = "insert into pokemon (" +
+                SortFieldsPokemonEnum.NUMERO.getColumn() +","+
+                SortFieldsPokemonEnum.NAME.getColumn() +","+
+                SortFieldsPokemonEnum.TYPE1.getColumn() +","+
+                SortFieldsPokemonEnum.TYPE2.getColumn() +","+
+                SortFieldsPokemonEnum.TOTAL.getColumn() +","+
+                SortFieldsPokemonEnum.HP.getColumn() +","+
+                SortFieldsPokemonEnum.ATTACK.getColumn() +","+
+                SortFieldsPokemonEnum.DEFENSE.getColumn() +","+
+                SortFieldsPokemonEnum.SP_ATK.getColumn() +","+
+                SortFieldsPokemonEnum.SP_DEF.getColumn() +","+
+                SortFieldsPokemonEnum.SPEED.getColumn() +","+
+                SortFieldsPokemonEnum.GENERATION.getColumn() +","+
+                SortFieldsPokemonEnum.LEGENDARY.getColumn() +
+                ") "+
+                " values ("+
+                ":"+SortFieldsPokemonEnum.NUMERO.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.NAME.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.TYPE1.getAttribute()+" , "+
+                ":"+SortFieldsPokemonEnum.TYPE2.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.TOTAL.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.HP.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.ATTACK.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.DEFENSE.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.SP_ATK.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.SP_DEF.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.SPEED.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.GENERATION.getAttribute() +" , "+
+                ":"+SortFieldsPokemonEnum.LEGENDARY.getAttribute()+")";
         return sql;
+
     }
 
     public DataSource dataSourcePokemon() {
@@ -146,6 +163,7 @@ public class BatchConfig {
 
         return embeddedDatabaseBuilder.addScript("classpath:org/springframework/batch/core/schema-drop-h2.sql")
                 .addScript("classpath:org/springframework/batch/core/schema-h2.sql")
+                .addScript("classpath:dataSource/tablesScripts.sql")
                 .setType(EmbeddedDatabaseType.H2)
                 .build();
     }

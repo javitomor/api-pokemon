@@ -1,14 +1,12 @@
 package com.example.apipokemon.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import javax.persistence.Column;
 
 @Getter
 public enum SortFieldsPokemonEnum {
 //TODO eliminar si no la voy a utilizar
     ID("id", "id"),
+    NUMERO("numero","numero"),
     NAME("name", "name"),
     TYPE1("type1", "type1"),
     TYPE2("type2", "type2"),

@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PokemonResponseDTO {
+public class PokemonResponseDTO implements Serializable {
     private Long id;
+    private int numero;
     private String name;
     private String type1;
     private String type2;

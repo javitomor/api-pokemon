@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PokemonRequestDTO {
+    private int numero;
     private String name;
     private String type1;
     private String type2;
