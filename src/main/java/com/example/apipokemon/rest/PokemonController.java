@@ -4,8 +4,6 @@ import com.example.apipokemon.configuration.ApiVersion;
 import com.example.apipokemon.enums.SortFieldsPokemonEnum;
 import com.example.apipokemon.lang.ApiError;
 import com.example.apipokemon.lang.MessageResource;
-import com.example.apipokemon.model.Pokemon;
-import com.example.apipokemon.payload.request.PaginatedRequest;
 import com.example.apipokemon.payload.request.PokemonRequestDTO;
 import com.example.apipokemon.payload.response.MessageResponse;
 import com.example.apipokemon.payload.response.PokemonResponseDTO;
