@@ -32,3 +32,23 @@ Once the project is finished you should share the project link with us in your G
 solution.
 Here is the link for the CSV file:
 https://gist.github.com/armgilles/194bcff35001e7eb53a2a8b441e8b2c6
+
+
+#EXPLICATION
+L'api développée permet de faire un CRUD sur une liste de pokémon.
+Il a les méthodes :
+* GET [/pokemons/v1.0]: Vous permet d'obtenir une liste paginée des pokémons créés.
+* GET [/pokemons/v1.0/{id}]: Vous permet d'obtenir un pokémon par ID.
+* POST [/pokemons/v1.0]: Vous permet de charger un pokémon.
+* PUT [/pokemons/v1.0/{id}]: Vous permet de mettre à jour les données d'un pokémon.
+* DELETE [/pokemons/v1.0/{id}]: Vous permet de supprimer un pokémon de la liste.
+
+Pour obtenir plus d'informations sur la mise en œuvre des services, vous pouvez consulter sa documentation à l'adresse
+http://localhost:8080/api-pokemon/swagger-ui.html#/
+
+L'API utilise une base de données H2 et peut être consultée sur
+* url: http://localhost:8080/api-pokemon/h2-console/
+* user: sa
+* pass: 
+
+Le langage de programmation utilisé est Java 11
