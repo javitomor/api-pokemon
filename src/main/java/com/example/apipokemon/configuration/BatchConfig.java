@@ -30,7 +30,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 @Configuration
 @EnableBatchProcessing
 public class BatchConfig {
-    //TODO no se esta cargando la primera linea del csv
+
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 

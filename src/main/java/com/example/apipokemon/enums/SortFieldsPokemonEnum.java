@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum SortFieldsPokemonEnum {
-//TODO eliminar si no la voy a utilizar
+
     ID("id", "id"),
     NUMERO("numero","numero"),
     NAME("name", "name"),

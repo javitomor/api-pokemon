@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/pokemons")
 public class PokemonController {
-    //TODO traducir todos los mensajes de messages.properties
+
     @Autowired
     IPokemonService pokemonService;
     @Autowired
@@ -45,8 +45,6 @@ public class PokemonController {
             @ApiParam(value = "Nombre de Elements") @RequestParam Integer nombreElements,
             @ApiParam(value = "Champ de tri") @RequestParam SortFieldsPokemonEnum champTri
     ) {
-        //DONE getAll paginado
-        //TODO test
 
 
         PokemonsListResponseDTO pokemonsListResponseDTO = PokemonsListResponseDTO.builder().build();
@@ -66,8 +64,6 @@ public class PokemonController {
     public ResponseEntity<PokemonResponseDTO> get(
             @ApiParam(value = "ID du Pokémon que nous voulons") @PathVariable("id") Long id
     ) {
-        //DONE get
-        //TODO test
 
         return ResponseEntity.ok(pokemonService.getPokemon(id));
     }
@@ -81,8 +77,7 @@ public class PokemonController {
     public ResponseEntity<MessageResponse> post(
             @ApiParam("Les données du Pokémon") @RequestBody PokemonRequestDTO pokemonRequestDTO
     ) {
-        //DONE post
-        //TODO test
+
         pokemonService.ajouterPokemon(pokemonRequestDTO);
 
         return ResponseEntity.ok(new MessageResponse(messageResource.toLocale("success.pokemon.created")));
@@ -95,8 +90,7 @@ public class PokemonController {
             @ApiParam("Les données du Pokémon") @RequestBody PokemonRequestDTO pokemonRequestDTO,
             @ApiParam(value = "ID du Pokémon que nous voulons") @PathVariable("id") Long id
     ) {
-        //DONE put
-        //TODO test
+
         pokemonService.updatePokemon(id, pokemonRequestDTO);
         return ResponseEntity.ok(new MessageResponse(messageResource.toLocale("success.pokemon.update")));
 
@@ -111,8 +105,7 @@ public class PokemonController {
     public ResponseEntity<MessageResponse> delete(
             @ApiParam(value = "ID du Pokémon que nous voulons") @PathVariable("id") Long id
     ) {
-        //DONE delete
-        //TODO test
+
         pokemonService.delete(id);
         return ResponseEntity.ok(new MessageResponse(messageResource.toLocale("success.pokemon.deleted")));
     }

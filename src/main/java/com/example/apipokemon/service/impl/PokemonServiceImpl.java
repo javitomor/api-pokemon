@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 public class PokemonServiceImpl implements IPokemonService {
 
-    //TODO cargar datos desde el csv
+
 
     @Autowired
     IPokemonRepository pokemonRepository;
