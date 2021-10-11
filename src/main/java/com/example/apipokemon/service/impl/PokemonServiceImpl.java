@@ -23,12 +23,15 @@ import java.util.Optional;
 public class PokemonServiceImpl implements IPokemonService {
 
 
-
     @Autowired
     IPokemonRepository pokemonRepository;
     @Autowired
     MessageResource messageResource;
 
+    public PokemonServiceImpl(IPokemonRepository pokemonRepository,MessageResource messageResource) {
+        this.pokemonRepository = pokemonRepository;
+        this.messageResource=messageResource;
+    }
 
     @Override
     public void delete(Long id) {
@@ -74,17 +77,19 @@ public class PokemonServiceImpl implements IPokemonService {
         save(pokemon);
     }
 
+    @Override
     public Page<Pokemon> findAllPaginated(Pageable pageable) {
         return pokemonRepository.findAll(pageable);
     }
 
+    @Override
     public Pokemon findById(Long id) {
         return pokemonRepository.findById(id).orElseThrow(() -> new PokemonNotFoundException(
                 String.format(messageResource.toLocale("error.pokemon.not.found"), id)
         ));
     }
 
-
+    @Override
     public Pokemon save(Pokemon pokemon) {
         try {
             return pokemonRepository.save(pokemon);
@@ -94,6 +99,7 @@ public class PokemonServiceImpl implements IPokemonService {
 
     }
 
+    @Override
     public PokemonResponseDTO convertToPokemonResponseDto(Pokemon pokemon) {
         return PokemonResponseDTO.builder()
                 .id(pokemon.getId())
@@ -113,7 +119,7 @@ public class PokemonServiceImpl implements IPokemonService {
                 .build();
     }
 
-
+    @Override
     public Pokemon convertToPokemon(PokemonRequestDTO pokemonDTO) {
         return Pokemon.builder()
                 .numero(Optional.of(pokemonDTO.getNumero()).orElse(null))
